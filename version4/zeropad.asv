@@ -1,0 +1,25 @@
+
+%! @file 
+% Expand the matrix to power of 2 before doing FFT. 
+% 
+ 
+
+%! Zeropad each column to preprare for FFT. Expand the length of each column to the power of 2. The value of s in each row is also computed. 
+% @param Radon matrix of Radon image 
+% @retval Radon2 expaned matrix of Radon image 
+% @retval axis_s value of s in each row 
+function Radon_pad = zeropad(Radon) 
+ 
+[size_s size_theta] = size(Radon); 
+
+len_pad= pow2(nextpow2(size_s));
+% Estimate the size of zeropad required 
+size_zeropad = len_pad - size_s; 
+size_left=floor(size_zeropad/2);
+
+ 
+% Add zeros to the middle of the shifted signal 
+shifted_Radon2 = vertcat(shifted_Radon(1:mid_position,:),zeropad,shifted_Radon((mid_position+1):size_s,:)); 
+ 
+% Shift the DC back to the centre 
+Radon_pad = fftshift(shifted_Radon2,1); 

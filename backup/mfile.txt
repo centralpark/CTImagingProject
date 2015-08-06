@@ -1,0 +1,35 @@
+00001 %%
+00002 %! @file
+00003 % Crop the image to specified range.
+00004 %
+00005 
+00006 %%
+00007 %! @param image Image to be cropped
+00008 % @param axis_xy original range of axes in the image
+00009 % @param xy_min top left hand corner of the crop box
+00010 % @param xy_max bottom right hand corner of the crop box
+00011 % @param DEBUG Debug mode. If DEBUG=1, save the preview image.
+00012 % @retval new_image cropped image
+00013 % @retval new_axis_xy new axes range
+00014 function [new_image new_axis_xy] = image_crop(image,axis_xy,xy_min,xy_max,DEBUG)
+00015 
+00016 % Make axis_xy a row vector
+00017 if( size(axis_xy,2) ==1)
+00018 axis_xy = axis_xy';
+00019 end
+00020 
+00021 % define crop box
+00022 [row_idx col_idx val] = find( axis_xy>=xy_min & axis_xy<=xy_max );
+00023 idx_begin = col_idx(1);
+00024 idx_end = col_idx(length(row_idx));
+00025 
+00026 new_image = image(idx_begin:idx_end,idx_begin:idx_end);
+00027 new_axis_xy = axis_xy(idx_begin:idx_end);
+00028 
+00029 if(DEBUG)
+00030 figure
+00031 imagesc(axis_xy,axis_xy,real(image)),colormap(gray),colorbar
+00032 xlim([xy_min xy_max]),ylim([xy_min xy_max])
+00033 title('Cropbox preview'),xlabel('x'),ylabel('y')
+00034 print -dpng 'cropbox_preview.png'
+00035 end
